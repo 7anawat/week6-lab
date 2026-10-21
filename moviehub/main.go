@@ -42,6 +42,10 @@ func main() {
 	// API เดิมของ MovieHub
 	mux.HandleFunc("POST /api/auth/register", h.Register)
 	mux.HandleFunc("POST /api/auth/login", h.Login)
+	mux.HandleFunc("GET /api/me", login(h.Me))
+	mux.HandleFunc("GET /api/me/wishlist", login(h.GetWishlist))
+	mux.HandleFunc("PUT /api/me/wishlist/{movieId}", login(h.AddWishlistItem))
+	mux.HandleFunc("DELETE /api/me/wishlist/{movieId}", login(h.RemoveWishlistItem))
 	mux.HandleFunc("GET /api/movies", h.SearchMovies)
 	mux.HandleFunc("GET /api/movies/{id}", h.GetMovie)
 	mux.HandleFunc("GET /api/movies/{id}/reviews", h.ListReviews)
