@@ -38,6 +38,15 @@ func main() {
 	admin := func(next http.HandlerFunc) http.HandlerFunc { return login(mw.RequireRole("admin", next)) }
 
 	mux := http.NewServeMux()
+
+	// API เดิมของ MovieHub
+	mux.HandleFunc("POST /api/auth/register", h.Register)
+	mux.HandleFunc("POST /api/auth/login", h.Login)
+	mux.HandleFunc("GET /api/movies", h.SearchMovies)
+	mux.HandleFunc("GET /api/movies/{id}", h.GetMovie)
+	mux.HandleFunc("GET /api/movies/{id}/reviews", h.ListReviews)
+
+	// Admin API
 	mux.HandleFunc("GET /api/admin/stats", admin(h.AdminStats))
 	mux.HandleFunc("GET /api/admin/members", admin(h.AdminMembers))
 	mux.HandleFunc("PUT /api/admin/members/{id}/role", admin(h.AdminSetRole))
@@ -45,7 +54,6 @@ func main() {
 	mux.HandleFunc("POST /api/admin/movies", admin(h.AdminCreateMovie))
 	mux.HandleFunc("PUT /api/admin/movies/{id}", admin(h.AdminUpdateMovie))
 	mux.HandleFunc("DELETE /api/admin/movies/{id}", admin(h.AdminDeleteMovie))
-
 	origins := strings.Split(os.Getenv("ALLOWED_ORIGINS"), ",")
 	port := os.Getenv("PORT")
 
